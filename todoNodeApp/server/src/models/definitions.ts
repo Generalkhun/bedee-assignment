@@ -32,5 +32,7 @@ export interface APIResponse<B> {
 
 // Error messages
 export enum ErrorMessages {
-    ALREADY_CREATED = "The task is already created! considered change the title."
+    ALREADY_CREATED = "The task is already created! considered change the title.",
+    NOT_CREATED_TASK_YET = "No task stored, please add a task before adding a subtask",
+    ALREADY_BELONG = "The subtask is already added to the task"
 }

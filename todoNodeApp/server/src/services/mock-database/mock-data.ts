@@ -1,7 +1,7 @@
 import { User, Task } from "../../models/definitions";
 
 // Users
-export const mockUsers: User[] = [
+export let mockUsers: User[] = [
   { id: 'user1', name: 'Alice' },
   { id: 'user2', name: 'Bob' },
   { id: 'user3', name: 'Charlie' },
