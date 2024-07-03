@@ -2,14 +2,6 @@ import { UpdatingTaskDetails } from "../definitions";
 
 
 namespace TasksRequest {
-    export interface GetTasks {
-        userId: string;
-        limit?: number | string;
-    }
-    export interface GetTaskById {
-        userId: string;
-        taskId: string;
-    }
     export interface AddTask {
         userId: string;
         taskTitle: string;

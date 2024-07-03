@@ -1,4 +1,4 @@
-import { APIResponse, BlockedTaskDetail, ErrorMessages, Task, UpdatingTaskDetails, isBlockedTaskDetail, isCompletedTaskDetail } from "../models/definitions"
+import { APIResponse, ErrorMessages, Task, UpdatingTaskDetails, isBlockedTaskDetail, isCompletedTaskDetail } from "../models/definitions"
 import { mockTasks } from "./mock-database/mock-data"
 
 
