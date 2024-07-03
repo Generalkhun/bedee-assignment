@@ -2,7 +2,7 @@ import { APIResponse, Task } from "../models/definitions";
 import { mockTasks } from "./mock-database/mock-data";
 
 /**
- * Todo: connect to real database when ready!
+ * @Todo : connect to real database when ready!
  * - limit can use in the database query
  * - check try catch and set the response status properly
  */

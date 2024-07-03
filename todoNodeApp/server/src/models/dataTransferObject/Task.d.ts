@@ -30,7 +30,3 @@ namespace TasksRequest {
         taskId: string; 
     }
 }
-
-namespace TasksResponse {
-    
-}

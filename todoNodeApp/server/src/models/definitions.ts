@@ -17,12 +17,31 @@ export interface User {
     name: string;
 }
 
-export interface UpdatingTaskDetails {
-    /**for futher updating detail, add here */
-    completionStatus?: TaskCompletionStatus
-    blockedByTaskId?: string[]
+// Task update
+export interface BlockedTaskDetail {
+    completionStatus: 'blocked'
+    blockedByTaskId: string[]
 }
 
+export interface CompletedTaskDetail {
+    completionStatus: 'completed'
+}
+
+export interface OtherTaskDetail {
+    completionStatus: "inprogress" | "backlog"
+}
+
+export function isBlockedTaskDetail(updatingDetails: UpdatingTaskDetails): updatingDetails is BlockedTaskDetail {
+    return (<BlockedTaskDetail>updatingDetails).completionStatus === 'blocked';
+}
+
+export function isCompletedTaskDetail(updatingDetails: UpdatingTaskDetails): updatingDetails is BlockedTaskDetail {
+    return (<CompletedTaskDetail>updatingDetails).completionStatus === 'completed';
+}
+
+export type UpdatingTaskDetails = BlockedTaskDetail | OtherTaskDetail | CompletedTaskDetail
+
+// api response
 export interface APIResponse<B> {
     status: number,
     body: B,
@@ -34,5 +53,6 @@ export interface APIResponse<B> {
 export enum ErrorMessages {
     ALREADY_CREATED = "The task is already created! considered change the title.",
     NOT_CREATED_TASK_YET = "No task stored, please add a task before adding a subtask",
-    ALREADY_BELONG = "The subtask is already added to the task"
+    ALREADY_BELONG = "The subtask is already added to the task",
+    USER_NOT_MATCHED = "The attempt to update data is not permitted, please use the right user to perform this action"
 }
