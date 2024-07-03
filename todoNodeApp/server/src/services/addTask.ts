@@ -61,7 +61,7 @@ export async function addSubTasktoDB({
     userId: string,
     taskId: string,
     subTaskId: string,
-}): Promise<APIResponse<{ taskWithSubTaskId: Task | null }>> {
+}): Promise<APIResponse<{ addedSubTaskId: string | null }>> {
 
     // check if already add this sub task id
     //Find if the user already got this task in the db
@@ -78,7 +78,7 @@ export async function addSubTasktoDB({
         return {
             status: 400,
             body: {
-                taskWithSubTaskId: null
+                addedSubTaskId: null
             },
             message: ErrorMessages.NOT_CREATED_TASK_YET
         }
@@ -89,12 +89,24 @@ export async function addSubTasktoDB({
         return {
             status: 400,
             body: {
-                taskWithSubTaskId: null
+                addedSubTaskId: null
             },
             message: ErrorMessages.ALREADY_BELONG
         }
     }
 
-    mockTasks = mockTasks
+    // add sub task to the correct task 
+    /**Todo implement in read db */
+    mockTasks.forEach((task) => {
+        if (task.id === taskId) {
+            task.subtasksId = [...task.subtasksId, subTaskId]
+        }
+    })
 
+    return {
+        status: 200,
+        body: {
+            addedSubTaskId: subTaskId
+        }
+    }
 }

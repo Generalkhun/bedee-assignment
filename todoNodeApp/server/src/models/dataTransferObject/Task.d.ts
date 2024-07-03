@@ -15,6 +15,11 @@ namespace TasksRequest {
         taskTitle: string;
         taskDescription: string;
     }
+    export interface AddSubTask {
+        userId: string;
+        taskId: string;
+        subTaskId: string;
+    }
     export interface UpdateTask {
         userId: string;
         taskId: string;

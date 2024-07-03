@@ -28,7 +28,7 @@ export async function addTask(request: Request<{}, {}, TasksRequest.AddTask>, re
     response.json(res)
 }
 
-export async function addSubTask(request: Request<{}, {}, TasksRequest.AddTask>, response: Response) {
+export async function addSubTask(request: Request<{}, {}, TasksRequest.AddSubTask>, response: Response) {
     const {
         userId,
         taskId,
