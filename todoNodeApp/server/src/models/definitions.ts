@@ -22,3 +22,15 @@ export interface UpdatingTaskDetails {
     completionStatus?: TaskCompletionStatus
     blockedByTaskId?: string[]
 }
+
+export interface APIResponse<B> {
+    status: number,
+    body: B,
+    message?: string,
+}
+
+
+// Error messages
+export enum ErrorMessages {
+    ALREADY_CREATED = "The task is already created! considered change the title."
+}

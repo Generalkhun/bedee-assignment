@@ -1,8 +1,5 @@
 import { Router } from 'express';
-const router = Router();
-
-/** Business layer */
-//const { addSubtask, updateSubtask } = require("../controller/subtask");
+const router = Router()
 import {
     getTasks,
     getTasksById,
