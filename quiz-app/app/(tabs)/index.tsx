@@ -4,43 +4,18 @@ import axios from 'axios';
 import { Answer, AnswerPassingObject, AnswersSelected, FetchedQuestion, QuizQuestion } from '@/definition/quiz';
 import QuestionsWrapper from '@/components/Questions/QuestionsWrapper';
 import { QuizContext } from '../context/QuizContext';
+import cx from 'classnames';
 
-const Quiz: React.FC = () => {
-  // const [questions, setQuestions] = useState<QuizQuestion[] | null>(null);
-  // const [answers, setAnswers] = useState<AnswersSelected>({});
-  // const [loading, setLoading] = useState<boolean>(true);
+const Quiz = () => {
+
   const [refreshing, setRefreshing] = React.useState(false);
   const {
     questions,
     loading,
+    canSubmit,
     fetchQuestion,
-    onAnswer,
+    onSubmitAnswer,
   } = useContext(QuizContext)
-
-  // const fetchQuestion = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get('https://opentdb.com/api.php?amount=20&type=multiple');
-  //     const data = response.data.results;
-  //     const questions = data.map((question: FetchedQuestion) => {
-  //       // get answers
-  //       const incorrectAnswers = question.incorrect_answers.map((ans: string) => ({ answerText: ans, isCorrect: false }))
-  //       const combinedAnswers = [...incorrectAnswers, { answerText: question.correct_answer, isCorrect: true }]
-  //       return {
-  //         question: question.question,
-  //         answers: combinedAnswers,
-  //       }
-  //     })
-  //     setQuestions(questions);
-  //   } catch (error) {
-  //     console.error('Error fetching question:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
-
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -49,8 +24,6 @@ const Quiz: React.FC = () => {
       setRefreshing(false);
     }, 2000);
   }, []);
-
-
 
   if (loading) {
     return (
@@ -61,7 +34,10 @@ const Quiz: React.FC = () => {
   }
 
   return (
-    <View className='pt-10 pb-10'>
+    <View className={cx(
+      'pt-10',
+      canSubmit? 'pb-10' : 'pb-3',
+    )}>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -70,7 +46,7 @@ const Quiz: React.FC = () => {
           {questions && <QuestionsWrapper questions={questions} />}
         </View>
       </ScrollView>
-      <Button title="Refresh Question" onPress={fetchQuestion} />
+      {canSubmit && <Button color={'teal'} title="Submit Answers" onPress={onSubmitAnswer} />}
     </View>
 
   );
