@@ -8,4 +8,5 @@ export interface QuizQuestion {
 export interface Answer {
   answerText: string
   isCorrect: boolean
+  isSelected?: boolean
 }

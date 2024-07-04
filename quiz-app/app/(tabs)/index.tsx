@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Button, ActivityIndicator, ScrollView } from 'react-native';
 import axios from 'axios';
 import { Answer, FetchedQuestion, QuizQuestion } from '@/definition/quiz';
-import Question from '@/components/Question';
+import QuestionsWrapper from '@/components/Questions/QuestionsWrapper';
 
 const Quiz: React.FC = () => {
   const [questions, setQuestions] = useState<QuizQuestion[] | null>(null);
@@ -45,19 +45,13 @@ const Quiz: React.FC = () => {
   }
 
   return (
-    <ScrollView className='flex p-5 justify-center items-center'>
-    {questions && (
-      <>
-        {
-          questions.map((question) => (
-            <Question question={question} />
-          ))
-        }
+    <ScrollView>
+      <View className='flex p-5 justify-center items-center text-red-50'>
+      {questions && <QuestionsWrapper questions={questions} />}
+      <Button title="Refresh Question" onPress={fetchQuestion} />
 
-      </>
-    )}
-    <Button title="Refresh Question" onPress={fetchQuestion} />
-  </ScrollView>
+      </View>
+    </ScrollView>
   );
 };
 
