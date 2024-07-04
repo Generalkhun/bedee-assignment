@@ -2,6 +2,7 @@ import { QuizContext } from '@/app/context/QuizContext';
 import { QuizQuestion, Answer, AnswerPassingObject } from '@/definition/quiz';
 import { useContext, useEffect, useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
+import cx from 'classnames';
 interface QuestionProp {
     question: QuizQuestion
     questionNumber: number
@@ -13,14 +14,6 @@ const Question = ({ question, questionNumber }: QuestionProp) => {
         onAnswer,
     } = useContext(QuizContext)
     const questionAnswers = question.answers
-    const [renderedAnswers, setRenderedAnswers] = useState<Answer[]>(questionAnswers)
-    const shuffleAnswers = (answers: Answer[]) => {
-        return answers.sort(() => Math.random() - 0.5);
-    };
-    useEffect(() => {
-        setRenderedAnswers(shuffleAnswers(questionAnswers))
-    }, [])
-
     const answeredChoice = answers[questionNumber]
     const onPressHandler = (choiceNumber: number, questionNumber: number) => {
         onAnswer({
@@ -30,11 +23,14 @@ const Question = ({ question, questionNumber }: QuestionProp) => {
     }
     return (
         <View className=''>
-            {renderedAnswers.map((choice, index) => {
-                return <TouchableOpacity key={index} className={`bg-${answeredChoice === index ? "red" : "blue"}-500 p-3 rounded-lg mb-2 w-full`} onPress={() => onPressHandler(index, questionNumber)}>
-                    <Text className='text-red text-center'>{choice.answerText}</Text>
+            {questionAnswers.map((choice, index) => (
+                <TouchableOpacity key={index} className={cx(
+                     'p-3 rounded-lg mb-2 w-full',
+                    index === answeredChoice ? 'bg-blue-300': 'bg-blue-500',
+                )} onPress={() => onPressHandler(index, questionNumber)}>
+                    <Text className='text-center'>{choice.answerText}</Text>
                 </TouchableOpacity>
-            })}
+            ))}
         </View>
     )
 }
