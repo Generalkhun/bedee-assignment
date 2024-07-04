@@ -1,5 +1,5 @@
 import { QuizContext } from '@/app/context/QuizContext';
-import { QuizQuestion } from '@/definition/quiz';
+import { Answer, QuizQuestion } from '@/definition/quiz';
 import { useContext } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import cx from 'classnames';
@@ -7,15 +7,24 @@ import { unescapeHtml } from '@/app/utils/utils';
 interface QuestionProp {
     question: QuizQuestion
     questionNumber: number
+    questionCorrectAnswer: number
+    isCorrectlyAnswered: boolean
+    answeredChoice: number
+    questionAnswers: Answer[]
 }
 
-const Question = ({ question, questionNumber }: QuestionProp) => {
+const Question = ({
+    question,
+    questionNumber,
+    questionCorrectAnswer,
+    isCorrectlyAnswered,
+    answeredChoice,
+    questionAnswers,
+}: QuestionProp) => {
     const {
-        answers,
         onAnswer,
+        showAnswers,
     } = useContext(QuizContext)
-    const questionAnswers = question.answers
-    const answeredChoice = answers[questionNumber]
     const onPressHandler = (choiceNumber: number, questionNumber: number) => {
         onAnswer({
             questionNumber,
@@ -23,11 +32,15 @@ const Question = ({ question, questionNumber }: QuestionProp) => {
         })
     }
     return (
-        <View className=''>
+        <View>
             {questionAnswers.map((choice, index) => (
                 <TouchableOpacity key={index} className={cx(
-                     'p-3 rounded-lg mb-2 w-full',
-                    index === answeredChoice ? 'bg-blue-300': 'bg-blue-500',
+                    'p-3 rounded-lg mb-2 w-full',
+                    showAnswers ? ((index === answeredChoice) ?
+                        (isCorrectlyAnswered ? 'bg-teal-500' : 'bg-red-400')
+                        :
+                        (index === questionCorrectAnswer ? 'bg-teal-700' : 'bg-blue-500'))
+                        : (index === answeredChoice ? 'bg-blue-300' : 'bg-blue-500'),
                 )} onPress={() => onPressHandler(index, questionNumber)}>
                     <Text className='text-center'>{unescapeHtml(choice.answerText)}</Text>
                 </TouchableOpacity>
