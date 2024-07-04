@@ -1,4 +1,5 @@
 
+import { LeaderBoardEntry } from '@/definition/leaderBoard';
 import { Alert } from 'react-native';
 export function unescapeHtml(safe: string) {
     return safe.replace(/&amp;/g, '&')
@@ -30,4 +31,15 @@ export const showConfirmationAlert = ({
         alertText,
         options,
     );
+};
+
+/**@todo Remove this list and fetch real leader board data */
+export const generateMockLeaderBoardData = (numberOfmockingParticipants: number): LeaderBoardEntry[] => {
+    return Array.from({ length: numberOfmockingParticipants }, (_, index) => ({
+        id: (index + 1).toString(),
+        name: `Player ${index + 1}`,
+        score: Math.floor(Math.random() * 21), // Random score between 0 and 20
+    }))
+        // Make the mock list sorted by score.
+        .sort((a, b) => b.score-a.score);
 };

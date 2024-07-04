@@ -9,7 +9,7 @@ interface Props {
     questions: QuizQuestion[] | []
 }
 const QuestionsWrapper = ({ questions }: Props) => {
-    const { answers } = useContext(QuizContext)
+    const { answers,showAnswers } = useContext(QuizContext)
     return (
         <View>
             {
@@ -21,7 +21,8 @@ const QuestionsWrapper = ({ questions }: Props) => {
                     return <View key={index}>
                         <Text className={cx(
                             'text-lg font-bold mb-5',
-                            isCorrectlyAnswered? 'text-green-500' : 'text-red-600'
+                            showAnswers ?
+                            isCorrectlyAnswered? 'text-green-500' : 'text-red-600' : ''
                         )}>{`${index + 1}.${unescapeHtml(question.question)}`}</Text>
                         <Question questionAnswers={question.answers} question={question} questionNumber={index} questionCorrectAnswer={questionCorrectAnswer} isCorrectlyAnswered={isCorrectlyAnswered} answeredChoice={answeredChoice} />
                     </View>
