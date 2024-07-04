@@ -1,18 +1,18 @@
 import React, { useContext, useCallback } from 'react';
-import { View, Button, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
-import axios from 'axios';
-import { Answer, AnswerPassingObject, AnswersSelected, FetchedQuestion, QuizQuestion } from '@/definition/quiz';
+import { View, Button, ActivityIndicator, ScrollView, RefreshControl, Text } from 'react-native';
 import QuestionsWrapper from '@/components/Questions/QuestionsWrapper';
 import { QuizContext } from '../context/QuizContext';
 import cx from 'classnames';
+import { NUMBER_OF_QUESTIONS, REFRESHING_SET_TIME, SCORE_CHECK_LEADER_BOARD } from '@/constants/AppConstants';
 
 const Quiz = () => {
-
   const [refreshing, setRefreshing] = React.useState(false);
   const {
     questions,
     loading,
     canSubmit,
+    totalScore,
+    showAnswers,
     fetchQuestion,
     onSubmitAnswer,
   } = useContext(QuizContext)
@@ -22,7 +22,7 @@ const Quiz = () => {
     fetchQuestion();
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, REFRESHING_SET_TIME);
   }, []);
 
   if (loading) {
@@ -36,7 +36,7 @@ const Quiz = () => {
   return (
     <View className={cx(
       'pt-10',
-      canSubmit? 'pb-10' : 'pb-3',
+      (canSubmit || showAnswers) ? 'pb-14' : 'pb-3',
     )}>
       <ScrollView
         refreshControl={
@@ -47,6 +47,14 @@ const Quiz = () => {
         </View>
       </ScrollView>
       {canSubmit && <Button color={'teal'} title="Submit Answers" onPress={onSubmitAnswer} />}
+      {showAnswers && <View className='flex items-center p-2'>
+        <Text>
+          {`TotalScore:${totalScore}/${NUMBER_OF_QUESTIONS}`}
+        </Text>
+        <Text>
+          {SCORE_CHECK_LEADER_BOARD}
+        </Text>
+      </View>}
     </View>
 
   );

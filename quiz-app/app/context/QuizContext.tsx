@@ -2,6 +2,7 @@ import { NUMBER_OF_QUESTIONS, QUESTIONS_URL } from '@/constants/AppConstants';
 import { QuizQuestion, AnswersSelected, FetchedQuestion, AnswerPassingObject, Answer } from '@/definition/quiz';
 import axios from 'axios';
 import React, { createContext, useEffect, useState } from 'react';
+import { showConfirmationAlert } from '../utils/utils';
 
 // Create the context
 interface QuizContextStore {
@@ -9,6 +10,8 @@ interface QuizContextStore {
   answers: AnswersSelected,
   loading: boolean,
   canSubmit: boolean,
+  showAnswers: boolean,
+  totalScore: number,
   fetchQuestion: () => void,
   onSubmitAnswer: () => void,
   onAnswer: (ans: AnswerPassingObject) => void,
@@ -17,10 +20,12 @@ export const QuizContext = createContext<QuizContextStore>({
   questions: [],
   answers: {},
   canSubmit: false,
+  showAnswers: false,
+  loading: false,
+  totalScore: 0,
   fetchQuestion: () => { },
   onAnswer: () => { },
   onSubmitAnswer: () => { },
-  loading: false,
 });
 
 // Create a provider component
@@ -29,6 +34,8 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
   const [answers, setAnswers] = useState<AnswersSelected>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [canSubmit, setCanSubmit] = useState<boolean>(false);
+  const [showAnswers, setShowAnswers] = useState<boolean>(false);
+  const [totalScore, setTotalScore] = useState<number>(0);
 
   // load quiz when open app
   useEffect(() => {
@@ -51,6 +58,7 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const fetchQuestion = async () => {
+    setShowAnswers(false)
     setAnswers({})
     setLoading(true);
     try {
@@ -85,21 +93,40 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
     return canSubmit
   }
 
+  const onPressProceedCalculateScore = () => {
+    setShowAnswers(true)
+    setCanSubmit(false)
+    // calculate score
+    let totalScore = 0
+    questions?.forEach((question,idx) => {
+      const userAnswer = answers[idx]
+      if(question.answers[userAnswer].isCorrect) {
+        totalScore++;
+      }
+    })
+    setTotalScore(totalScore)
+  }
+
   const onSubmitAnswer = () => {
-    const canSubmit = validateAnswerAllQuestions();
-    if (!canSubmit) {
-      alert('Please complete all quizes before submit')
-    }
+    showConfirmationAlert({
+      alertTitle: 'Submit',
+      alertText: 'Confirm submit quiz',
+      confirmText: 'submit',
+      cancelText: 'cancel',
+      onPressProceed: onPressProceedCalculateScore
+    });
   }
 
   const quizStore = {
     questions,
     answers,
+    canSubmit,
+    showAnswers,
+    loading,
+    totalScore,
     fetchQuestion,
     onAnswer,
     onSubmitAnswer,
-    canSubmit,
-    loading
   }
   return (
     <QuizContext.Provider value={quizStore}>
