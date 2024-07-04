@@ -40,6 +40,5 @@ export const generateMockLeaderBoardData = (numberOfmockingParticipants: number)
         name: `Player ${index + 1}`,
         score: Math.floor(Math.random() * 21), // Random score between 0 and 20
     }))
-        // Make the mock list sorted by score.
-        .sort((a, b) => b.score-a.score);
+        .sort((a, b) => b.score - a.score)
 };

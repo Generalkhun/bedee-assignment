@@ -11,10 +11,12 @@ interface QuizContextStore {
   loading: boolean,
   canSubmit: boolean,
   showAnswers: boolean,
-  totalScore: number,
+  totalScore: number | null,
+  isLoggedOnLeaderBoard: boolean,
   fetchQuestion: () => void,
   onSubmitAnswer: () => void,
   onAnswer: (ans: AnswerPassingObject) => void,
+  updateLoggedScore: () => void,
 }
 export const QuizContext = createContext<QuizContextStore>({
   questions: [],
@@ -22,10 +24,12 @@ export const QuizContext = createContext<QuizContextStore>({
   canSubmit: false,
   showAnswers: false,
   loading: false,
-  totalScore: 0,
+  totalScore: null,
+  isLoggedOnLeaderBoard: false,
   fetchQuestion: () => { },
   onAnswer: () => { },
   onSubmitAnswer: () => { },
+  updateLoggedScore: () => { },
 });
 
 // Create a provider component
@@ -36,6 +40,7 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
   const [canSubmit, setCanSubmit] = useState<boolean>(false);
   const [showAnswers, setShowAnswers] = useState<boolean>(false);
   const [totalScore, setTotalScore] = useState<number>(0);
+  const [isLoggedOnLeaderBoard, setIsLoggedOnLeaderBoard] = useState<boolean>(false)
 
   // load quiz when open app
   useEffect(() => {
@@ -61,6 +66,7 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
     setShowAnswers(false)
     setAnswers({})
     setLoading(true);
+    setIsLoggedOnLeaderBoard(false)
     try {
       const response = await axios.get(QUESTIONS_URL);
       const data = response.data.results;
@@ -98,9 +104,9 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
     setCanSubmit(false)
     // calculate score
     let totalScore = 0
-    questions?.forEach((question,idx) => {
+    questions?.forEach((question, idx) => {
       const userAnswer = answers[idx]
-      if(question.answers[userAnswer].isCorrect) {
+      if (question.answers[userAnswer].isCorrect) {
         totalScore++;
       }
     })
@@ -117,6 +123,10 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }
 
+  const updateLoggedScore = () => {
+    setIsLoggedOnLeaderBoard(true)
+  }
+
   const quizStore = {
     questions,
     answers,
@@ -124,13 +134,15 @@ export const QuizProvider = ({ children }: { children: React.ReactNode }) => {
     showAnswers,
     loading,
     totalScore,
+    isLoggedOnLeaderBoard,
     fetchQuestion,
     onAnswer,
     onSubmitAnswer,
-  }
-  return (
-    <QuizContext.Provider value={quizStore}>
-      {children}
-    </QuizContext.Provider>
-  );
+    updateLoggedScore,
+}
+return (
+  <QuizContext.Provider value={quizStore}>
+    {children}
+  </QuizContext.Provider>
+);
 };

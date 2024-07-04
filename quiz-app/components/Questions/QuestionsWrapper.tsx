@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React, { useContext } from 'react'
-import { AnswerPassingObject, QuizQuestion } from '@/definition/quiz'
+import { QuizQuestion } from '@/definition/quiz'
 import Question from './Question'
 import { unescapeHtml } from '@/app/utils/utils'
 import { QuizContext } from '@/app/context/QuizContext'
 import cx from 'classnames'
 interface Props {
-    questions: QuizQuestion[] | []
+    questions: QuizQuestion[] | [] 
 }
 const QuestionsWrapper = ({ questions }: Props) => {
     const { answers,showAnswers } = useContext(QuizContext)

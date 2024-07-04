@@ -1,70 +1,97 @@
-// components/Leaderboard.tsx
-import React, { useEffect, useRef, useState } from 'react';
+// // components/Leaderboard.tsx
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { View, Text, FlatList, Button, TextInput } from 'react-native';
 import { LeaderBoardEntry } from '@/definition/leaderBoard';
 import { generateMockLeaderBoardData } from '@/app/utils/utils';
-
-// mock leaderboard data, @todo user real data
+import { QuizContext } from '@/app/context/QuizContext';
+import cx from 'classnames'
+// mock leaderboard data, @todo use real data
 const data: LeaderBoardEntry[] = generateMockLeaderBoardData(30)
 
 const Leaderboard = () => {
-    const myScore = 14
-  const [leaderboardData, setLeaderboardData] = useState<LeaderBoardEntry[]>(data);
-  const [userName, setUserName] = useState<string>('');
-  const flatListRef = useRef<FlatList>(null);
+    const {
+        isLoggedOnLeaderBoard,
+        updateLoggedScore,
+        totalScore,
+    } = useContext(QuizContext)
+    const [leaderboardData, setLeaderboardData] = useState<LeaderBoardEntry[]>(data);
+    const [userName, setUserName] = useState<string>('');
+    const [userId, setUserId] = useState<string>('');
+    const flatListRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    // Find the index of the item with the user's score
-    const index = leaderboardData.findIndex(entry => entry.score === myScore);
-    // Scroll to the position of the user's score
-    if (index !== -1 && flatListRef.current) {
-      flatListRef.current.scrollToIndex({ animated: true, index });
-    }
-  }, [myScore, leaderboardData]);
+    useEffect(() => {
+        if (!userId) {
+            return;
+        }
+        // Find the index of the item with the user's score
+        const index = leaderboardData.findIndex(entry => entry.id === userId);
+        // Scroll to the position of the user's score
+        if (index !== -1 && flatListRef.current) {
+            setTimeout(() => {
+                flatListRef.current?.scrollToIndex({ animated: true, index });
+            }, 500); // Adjust the timeout duration as needed
+        }
+    }, [userId, leaderboardData]);
 
-  const handleConfirm = () => {
-    // Update the leaderboard data with the user's name
-    const updatedData = leaderboardData.map(entry => 
-      entry.score === myScore ? { ...entry, name: userName } : entry
+    const handleConfirm = () => {
+        if (!totalScore) {
+            return;
+        }
+        setUserId("")
+        const newUserId = Math.random().toString()
+        // Update the leaderboard data with the user's name
+        const updatedLeaderBoardData = [...leaderboardData, {
+            id: newUserId,
+            name: userName,
+            score: totalScore,
+        }]
+            .sort((a, b) => b.score - a.score)
+        setUserId(newUserId)
+        setUserName('');
+        setLeaderboardData(updatedLeaderBoardData);
+        updateLoggedScore();
+    };
+
+    const renderItem = ({ item, index }: { item: LeaderBoardEntry, index: number }) => (
+        <View className="flex-row justify-between p-4 border-b border-gray-200">
+            <Text className={cx(
+                "text-lg font-bold",
+                item.id === userId ? "text-orange-400" : ""
+            )}>{`${index + 1}.${item.name}`}</Text>
+            <Text className="text-lg">{item.score}</Text>
+        </View>
     );
-    setLeaderboardData(updatedData);
-    setUserName('');
-  };
 
-  const renderItem = ({ item }: { item: LeaderBoardEntry }) => (
-    <View className="flex-row justify-between p-4 border-b border-gray-200">
-      {item.score === myScore ? (
-        <>
-          <TextInput
-            className="border rounded p-2 w-1/2"
-            placeholder="Enter your name"
-            value={userName}
-            onChangeText={setUserName}
-          />
-          <Button title="Confirm" onPress={handleConfirm} />
-          <Text className="text-lg">{item.score}</Text>
-        </>
-      ) : (
-        <>
-          <Text className="text-lg font-bold">{item.name}</Text>
-          <Text className="text-lg">{item.score}</Text>
-        </>
-      )}
-    </View>
-  );
+    // Define getItemLayout to help FlatList calculate item positions
+    const getItemLayout = (
+        _: ArrayLike<LeaderBoardEntry> | null | undefined,
+        index: number
+    ) => ({ length: 52, offset: 52 * index, index });
 
-  return (
-    <View className="flex-1 bg-white p-4">
-      <Text className="text-2xl font-bold mb-4">Leaderboard</Text>
-      <FlatList
-        ref={flatListRef}
-        data={leaderboardData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-      />
-    </View>
-  );
+    return (
+        <View className="flex-1 bg-white p-4">
+            <Text className="text-2xl font-bold mb-4">Leaderboard</Text>
+            {(totalScore && !isLoggedOnLeaderBoard) && <>
+                <View className="flex-row mr-10">
+                    <TextInput
+                        className="border rounded p-2 w-1/2 mr-2"
+                        placeholder="Enter your name"
+                        value={userName}
+                        onChangeText={setUserName}
+                    />
+                    <Button title="Confirm" onPress={handleConfirm} />
+                    <Text className='text-l ml-2 pt-2 font-bold'>{`Your score:${totalScore}`} </Text>
+                </View>
+            </>}
+            <FlatList
+                ref={flatListRef}
+                data={leaderboardData}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+                getItemLayout={getItemLayout}
+            />
+        </View>
+    );
 };
 
 export default Leaderboard;
-
