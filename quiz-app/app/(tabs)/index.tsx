@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ActivityIndicator,ScrollView } from 'react-native';
+import { View, Text, Button, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import axios from 'axios';
 import { Answer, FetchedQuestion, QuizQuestion } from '@/definition/quiz';
+import Question from '@/components/Question';
 
 const Quiz: React.FC = () => {
   const [questions, setQuestions] = useState<QuizQuestion[] | null>(null);
@@ -30,9 +31,6 @@ const Quiz: React.FC = () => {
     }
   };
 
-  const shuffleAnswers = (answers: Answer[]) => {
-    return answers.sort(() => Math.random() - 0.5);
-  };
 
   useEffect(() => {
     fetchQuestion();
@@ -48,27 +46,18 @@ const Quiz: React.FC = () => {
 
   return (
     <ScrollView className='flex p-5 justify-center items-center'>
-      {questions && (
-        <>
-          {
-            questions.map((question) => (
-              <View>
-                <Text className='text-lg font-bold mb-5'>{question.question}</Text>
-                <View>
-                  {shuffleAnswers(question.answers).map((answer, index) => (
-                    <TouchableOpacity key={index} className='bg-blue-500 p-3 rounded-lg mb-2 w-full' onPress={() => alert(answer)}>
-                      <Text className='text-white text-center'>{answer.answerText}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
+    {questions && (
+      <>
+        {
+          questions.map((question) => (
+            <Question question={question} />
+          ))
+        }
 
-            ))
-          }
-          <Button title="Refresh Question" onPress={fetchQuestion} />
-        </>
-      )}
-    </ScrollView>
+      </>
+    )}
+    <Button title="Refresh Question" onPress={fetchQuestion} />
+  </ScrollView>
   );
 };
 
