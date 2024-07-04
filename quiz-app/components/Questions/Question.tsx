@@ -1,8 +1,9 @@
 import { QuizContext } from '@/app/context/QuizContext';
-import { QuizQuestion, Answer, AnswerPassingObject } from '@/definition/quiz';
-import { useContext, useEffect, useState } from 'react'
+import { QuizQuestion } from '@/definition/quiz';
+import { useContext } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import cx from 'classnames';
+import { unescapeHtml } from '@/app/utils/utils';
 interface QuestionProp {
     question: QuizQuestion
     questionNumber: number
@@ -28,7 +29,7 @@ const Question = ({ question, questionNumber }: QuestionProp) => {
                      'p-3 rounded-lg mb-2 w-full',
                     index === answeredChoice ? 'bg-blue-300': 'bg-blue-500',
                 )} onPress={() => onPressHandler(index, questionNumber)}>
-                    <Text className='text-center'>{choice.answerText}</Text>
+                    <Text className='text-center'>{unescapeHtml(choice.answerText)}</Text>
                 </TouchableOpacity>
             ))}
         </View>
