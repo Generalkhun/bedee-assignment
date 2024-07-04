@@ -10,3 +10,9 @@ export interface Answer {
   isCorrect: boolean
   isSelected?: boolean
 }
+
+export interface AnswersSelected {
+  [key: number]: number
+}
+
+export interface AnswerPassingObject { questionNumber: number, answerSelected: number }
