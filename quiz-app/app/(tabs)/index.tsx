@@ -47,9 +47,8 @@ const Quiz: React.FC = () => {
   return (
     <ScrollView>
       <View className='flex p-5 justify-center items-center text-red-50'>
-      {questions && <QuestionsWrapper questions={questions} />}
-      <Button title="Refresh Question" onPress={fetchQuestion} />
-
+        {questions && <QuestionsWrapper questions={questions} />}
+        <Button title="Refresh Question" onPress={fetchQuestion} />
       </View>
     </ScrollView>
   );

@@ -11,7 +11,7 @@ const QuestionsWrapper = ({ questions }: Props) => {
             {
                 questions.map((question, index) => (
                     <View key={index}>
-                        <Text className='text-lg font-bold mb-5'>Question: {question.question}</Text>
+                        <Text className='text-lg font-bold mb-5'>{question.question.replace(/&quot;/g, '"')}</Text>
                         <Question question={question} />
                     </View>
 
