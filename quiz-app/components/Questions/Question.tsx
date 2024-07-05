@@ -34,7 +34,7 @@ const Question = ({
     return (
         <View>
             {questionAnswers.map((choice, index) => (
-                <TouchableOpacity key={index} className={cx(
+                <TouchableOpacity testID={`choice-${index}`} key={index} className={cx(
                     'p-3 rounded-lg mb-2 w-full',
                     showAnswers ? ((index === answeredChoice) ?
                         (isCorrectlyAnswered ? 'bg-teal-500' : 'bg-red-400')
