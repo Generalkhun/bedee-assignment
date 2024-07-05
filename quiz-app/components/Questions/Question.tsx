@@ -5,7 +5,6 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import cx from 'classnames';
 import { unescapeHtml } from '@/app/utils/utils';
 interface QuestionProp {
-    question: QuizQuestion
     questionNumber: number
     questionCorrectAnswer: number
     isCorrectlyAnswered: boolean
@@ -14,7 +13,6 @@ interface QuestionProp {
 }
 
 const Question = ({
-    question,
     questionNumber,
     questionCorrectAnswer,
     isCorrectlyAnswered,

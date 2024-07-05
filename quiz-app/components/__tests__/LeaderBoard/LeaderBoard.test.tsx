@@ -1,15 +1,12 @@
-// Import necessary libraries and functions for testing
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react-native';
 import Leaderboard from '../../LeaderBoard/LeaderBoard'; // Adjust the path as per your project structure
 import { QuizContext } from '@/app/context/QuizContext';
 
-// Mock generateMockLeaderBoardData function
 jest.mock('@/app/utils/utils', () => ({
     generateMockLeaderBoardData: jest.fn(() => [
         { id: '1', name: 'John Doe', score: 200 },
         { id: '2', name: 'Jane Smith', score: 150 },
-        // Add more mock data as needed
     ]),
 }));
 
@@ -29,6 +26,10 @@ const renderWithContext = (component: any) => {
 };
 
 describe('<Leaderboard />', () => {
+    afterEach(() => {
+        jest.clearAllMocks(); // Clear all mocks after each test
+        cleanup(); // Cleanup after each test
+    });
     it('renders leaderboard correctly', () => {
         const { getByText, getByPlaceholderText } = renderWithContext(<Leaderboard />);
 
@@ -64,16 +65,21 @@ describe('<Leaderboard />', () => {
         });
     });
 
+    /**@todo make it works */
     xit('scrolls to user position on leaderboard update', async () => {
-        // Mock the FlatList ref and scrollToIndex method
-        const flatListRef = {
-            current: {
-                scrollToIndex: jest.fn(),
-            },
-        };
+        jest.mock('react', () => {
+            const originReact = jest.requireActual('react');
+            const flatListRef = {
+                current: {
+                    scrollToIndex: jest.fn(),
+                },
+            };
 
-        // Mock useRef to return the mocked FlatList ref
-        jest.spyOn(React, 'useRef').mockReturnValue(flatListRef);
+            return {
+                ...originReact,
+                useRef: jest.fn().mockReturnValue(flatListRef)
+            };
+        });
         const { getByText, getByPlaceholderText, getByTestId } = renderWithContext(<Leaderboard />);
 
         // Simulate entering a name and confirming
@@ -93,7 +99,7 @@ describe('<Leaderboard />', () => {
             // Ensure you have a testID for FlatList in the Leaderboard component
             const flatList = getByTestId('leaderboard-list');
             expect(flatList).toBeDefined();
-            expect(flatList.props.scrollToIndex).toHaveBeenCalledWith({ animated: true, index: 0 });
+            expect(flatList.props.ref.scrollToIndex).toHaveBeenCalledWith({ animated: true, index: 0 });
         });
     });
 });

@@ -26,7 +26,6 @@ describe('Question component', () => {
         const { getByText } = render(
             <QuizContext.Provider value={mockContextValue}>
                 <Question
-                    question={mockQuestion}
                     questionNumber={0}
                     questionCorrectAnswer={0}
                     isCorrectlyAnswered={true}
@@ -47,7 +46,6 @@ describe('Question component', () => {
             const { getByTestId } = render(
                 <QuizContext.Provider value={mockContextValue}>
                     <Question
-                        question={mockQuestion}
                         questionNumber={0}
                         questionCorrectAnswer={0}
                         isCorrectlyAnswered={false}
@@ -73,7 +71,6 @@ describe('Question component', () => {
             const { getByTestId } = render(
                 <QuizContext.Provider value={mockContextValue}>
                     <Question
-                        question={mockQuestion}
                         questionNumber={0}
                         questionCorrectAnswer={0}
                         isCorrectlyAnswered={false}
@@ -99,10 +96,11 @@ describe('Question component', () => {
     });
 
     it('calls onAnswer when an answer is selected', () => {
+        //change showAnswers to false in order to simulate the quiz in progress state
+        mockContextValue.showAnswers = false
         const { getByText } = render(
             <QuizContext.Provider value={mockContextValue}>
                 <Question
-                    question={mockQuestion}
                     questionNumber={0}
                     questionCorrectAnswer={0}
                     isCorrectlyAnswered={false}
@@ -117,12 +115,12 @@ describe('Question component', () => {
 
         fireEvent.press(getByText('London'));
         expect(mockContextValue.onAnswer).toHaveBeenCalledWith({ questionNumber: 0, answerSelected: 1 });
+        mockContextValue.showAnswers = true
     });
     it('disables choices when showAnswers is true', () => {
         const { getByTestId } = render(
             <QuizContext.Provider value={mockContextValue}>
                 <Question
-                    question={mockQuestion}
                     questionNumber={0}
                     questionCorrectAnswer={0}
                     isCorrectlyAnswered={false}
