@@ -1,7 +1,6 @@
 import { mockTasks } from "./mock-database/mock-data"
 
 export async function deleteTaskDB({
-    userId,
     taskId,
 }: {
     userId: string,

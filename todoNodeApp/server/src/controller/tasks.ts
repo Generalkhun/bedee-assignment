@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TasksRequest } from "../models/dataTransferObject/Task";
-import { fetchTaskFromTaskId, fetchTasksFromUserId } from "../services/fetchTasks";
+import { fetchTaskFromTaskId } from "../services/fetchTasks";
 import { addTasktoDB, addSubTasktoDB } from "../services/addTask";
 import { updateTaskDB } from "../services/updateTask";
 import { deleteTaskDB } from "../services/deleteTaskDB";

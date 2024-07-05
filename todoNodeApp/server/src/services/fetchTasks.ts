@@ -6,7 +6,7 @@ import { mockTasks } from "./mock-database/mock-data";
  * - limit can use in the database query
  * - check try catch and set the response status properly
  */
-type FetchTasksResponse = APIResponse<{ tasks: Task[] | [] }>
+export type FetchTasksResponse = APIResponse<{ tasks: Task[] | [] }>
 export async function fetchTasksFromUserId(id: string, limit?: number): Promise<FetchTasksResponse> {
     let result = mockTasks.filter((task: Task) => task.ownerId === id)
     if (limit) {
