@@ -13,6 +13,7 @@ const Leaderboard = () => {
         isLoggedOnLeaderBoard,
         updateLoggedScore,
         totalScore,
+        showAnswers,
     } = useContext(QuizContext)
     const [leaderboardData, setLeaderboardData] = useState<LeaderBoardEntry[]>(data);
     const [userName, setUserName] = useState<string>('');
@@ -71,7 +72,7 @@ const Leaderboard = () => {
     return (
         <View className="flex-1 bg-white p-4">
             <Text className="text-2xl font-bold mb-4">Leaderboard</Text>
-            {(totalScore !== null && !isLoggedOnLeaderBoard) ? <>
+            {(totalScore !== null && showAnswers && !isLoggedOnLeaderBoard) ? <>
                 <View className="flex-row mr-10">
                     <TextInput
                         className="border rounded p-2 w-1/2 mr-2"
