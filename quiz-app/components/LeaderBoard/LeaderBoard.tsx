@@ -34,7 +34,7 @@ const Leaderboard = () => {
     }, [userId, leaderboardData]);
 
     const handleConfirm = () => {
-        if (!totalScore) {
+        if (totalScore === null) {
             return;
         }
         setUserId("")
@@ -71,7 +71,7 @@ const Leaderboard = () => {
     return (
         <View className="flex-1 bg-white p-4">
             <Text className="text-2xl font-bold mb-4">Leaderboard</Text>
-            {(totalScore && !isLoggedOnLeaderBoard) && <>
+            {(totalScore !== null && !isLoggedOnLeaderBoard) ? <>
                 <View className="flex-row mr-10">
                     <TextInput
                         className="border rounded p-2 w-1/2 mr-2"
@@ -82,7 +82,7 @@ const Leaderboard = () => {
                     <Button title="Confirm" onPress={handleConfirm} />
                     <Text className='text-l ml-2 pt-2 font-bold'>{`Your score:${totalScore}`} </Text>
                 </View>
-            </>}
+            </>:null}
             <FlatList
                 ref={flatListRef}
                 data={leaderboardData}
