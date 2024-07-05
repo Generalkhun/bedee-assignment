@@ -1,3 +1,8 @@
+Contained in this repository, are 3 assignments
+1. Backend Developer Exam: located in `todoNodeApp`
+2. React-native developer Exam: located in `quiz-app`
+3. Technical Test: located in `technical-test`
+
 For `React native assignment` (located in `quiz-app` folder) please perform simple steps as follow in order to play the demo quiz app:
 1. install expo go app in goole play or app store
 2. open the app
