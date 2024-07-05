@@ -1,5 +1,3 @@
-// Question.test.tsx
-
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { QuizContext } from '@/app/context/QuizContext';
@@ -119,5 +117,28 @@ describe('Question component', () => {
 
         fireEvent.press(getByText('London'));
         expect(mockContextValue.onAnswer).toHaveBeenCalledWith({ questionNumber: 0, answerSelected: 1 });
+    });
+    it('disables choices when showAnswers is true', () => {
+        const { getByTestId } = render(
+            <QuizContext.Provider value={mockContextValue}>
+                <Question
+                    question={mockQuestion}
+                    questionNumber={0}
+                    questionCorrectAnswer={0}
+                    isCorrectlyAnswered={false}
+                    answeredChoice={1}
+                    questionAnswers={mockAnswers}
+                />
+            </QuizContext.Provider>
+        );
+
+        const parisChoice = getByTestId('choice-0');
+        const londonChoice = getByTestId('choice-1');
+        const berlinChoice = getByTestId('choice-2');
+        const madridChoice = getByTestId('choice-3');
+        expect(parisChoice.props.accessibilityState.disabled).toBe(true);
+        expect(londonChoice.props.accessibilityState.disabled).toBe(true);
+        expect(berlinChoice.props.accessibilityState.disabled).toBe(true);
+        expect(madridChoice.props.accessibilityState.disabled).toBe(true);
     });
 });
