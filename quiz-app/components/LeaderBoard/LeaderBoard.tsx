@@ -1,10 +1,10 @@
-// // components/Leaderboard.tsx
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { View, Text, FlatList, Button, TextInput } from 'react-native';
 import { LeaderBoardEntry } from '@/definition/leaderBoard';
 import { generateMockLeaderBoardData } from '@/app/utils/utils';
 import { QuizContext } from '@/app/context/QuizContext';
 import cx from 'classnames'
+import { AUTO_SCROLL_DELAY_TIME } from '@/constants/AppConstants';
 // mock leaderboard data, @todo use real data
 const data: LeaderBoardEntry[] = generateMockLeaderBoardData(30)
 
@@ -29,7 +29,7 @@ const Leaderboard = () => {
         if (index !== -1 && flatListRef.current) {
             setTimeout(() => {
                 flatListRef.current?.scrollToIndex({ animated: true, index });
-            }, 500); // Adjust the timeout duration as needed
+            }, AUTO_SCROLL_DELAY_TIME); // Adjust the timeout duration as needed
         }
     }, [userId, leaderboardData]);
 
